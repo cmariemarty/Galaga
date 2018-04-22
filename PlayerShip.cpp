@@ -3,14 +3,14 @@
                     Christina Martinez, Taylor Robinett)
 * Assignment Title: Galaga_Project
 * Assignment Description: This program is a recreation of the
-*       vintage shooter, Galaga. This file dictates the
-*       creation and movement of the player ship
+*       vintage shooter, Galaga.
 * Due Date: 4/25/2018
 * Date Created: 4/7/2018
-* Date Last Modified: 4/7/2018
+* Date Last Modified: 4/21/2018
 */
 
 #include "PlayerShip.h"
+#include "Arm_Photon_Torpedos.h"
 #include <SDL.h>
 
 const int WIDTH = 500;
@@ -31,12 +31,6 @@ PlayerShip::~PlayerShip()
 
 }
 
-// Creates twin ship
-PlayerShip::PlayerShip(int startX)
-{
-    xPos = startX;
-}
-
 // Gets the ships x coordinate
 int PlayerShip::getxPos()
 {
@@ -48,16 +42,6 @@ int PlayerShip::getyPos()
 {
     return yPos;
 }
-
-/*int PlayerShip::getShipH()
-{
-    return ShipH;
-}
-
-int PlayerShip::getShipW()
-{
-    return ShipW;
-}*/
 
 // Renders player ship to screen
 void PlayerShip::renderShip(SDL_Renderer* field, SDL_Texture* space)
@@ -76,15 +60,12 @@ void PlayerShip::renderShip(SDL_Renderer* field, SDL_Texture* space)
 // Moves the ship around
 void PlayerShip::setxPos(int newX)
 {
-    if (xPos < 10)
+    bool inBounds = true;
+    if ((xPos + newX) < 1 || ((xPos +ShipW) + newX) > 499)
     {
-        xPos = 11;
+        inBounds = false;
     }
-    else if (xPos > (WIDTH - ShipW) -10)
-    {
-        xPos = (WIDTH - ShipW) -11;
-    }
-    else
+    if (inBounds == true)
     {
         xPos += newX;
     }

@@ -3,11 +3,10 @@
                     Christina Martinez, Taylor Robinett)
 * Assignment Title: Galaga_Project
 * Assignment Description: This program is a recreation of the
-*       vintage shooter, Galaga. This file dictates the
-*       creation and movement of the player ship
+*       vintage shooter, Galaga.
 * Due Date: 4/25/2018
 * Date Created: 4/7/2018
-* Date Last Modified: 4/12/2018
+* Date Last Modified: 4/21/2018
 */
 
 #include "Arm_Photon_Torpedos.h"
@@ -20,6 +19,7 @@ const int HEIGHT = 500;
 const int START_X = (WIDTH / 2) - 12;
 const int START_Y = (HEIGHT - 50);
 
+// Constructs basic player torpedo
 PhotonTorpedo::PhotonTorpedo()
 {
     currX = START_X + 11;
@@ -40,21 +40,25 @@ PhotonTorpedo::~PhotonTorpedo()
 
 }
 
+// Sets torpedo x coordinate
 void PhotonTorpedo::setcurrX(int newX)
 {
     currX = newX;
 }
 
+// Moves photon torpedo
 void PhotonTorpedo::Move()
 {
     currY -= 10;
 }
 
+// Gets Torpedo y coordinate
 int PhotonTorpedo::getcurrX()
 {
     return currX;
 }
 
+// Gets torpedo x coordinate
 int PhotonTorpedo::getcurrY()
 {
     return currY;
@@ -74,23 +78,31 @@ void PhotonTorpedo::renderTorpedo(SDL_Renderer* field, SDL_Texture* space)
     SDL_RenderCopy(field, space, NULL, &torpedoSpace);
 }
 
-// Checking for overcapacity of shot array
-void checkShotCount(int& shotCount)
+// Checking for collisions
+void PhotonTorpedo::checkCollision(EnemyShip ship[], bool& collide,
+                                   int numOfEnemies, int& numOfDestroyed,
+                                   int& killCount)
 {
-    if (shotCount == 100)
+    for (int i = 0; i < numOfEnemies; i++)
     {
-        shotCount = 0;
+        if (ship[i].getX() <= currX && (ship[i].getX() + 25) >= currX
+            && (ship[i].getY() + 25) > currY && ship[i].getY() < currY
+            && ship[i].isDestroyed == false && active == true)
+        {
+            collide = true;
+            ship[i].isSplosion = true;
+            active = false;
+            numOfDestroyed++;
+            killCount++;
+        }
     }
 }
 
-// Checking for collisions
-void PhotonTorpedo::checkCollision(EnemyShip ship, bool& collide, bool& enemyCollision,
-                                   bool isDestroyed)
+// Checking for overcapacity of shot array
+void checkShotCount(int& shotCount)
 {
-    if (ship.getX() <= currX && (ship.getX() + 25) >= currX
-        && (ship.getY() + 25) > currY && ship.getY() < currY && isDestroyed == false)
+    if (shotCount == 500)
     {
-        collide = true;
-        enemyCollision = true;
+        shotCount = 0;
     }
 }

@@ -3,11 +3,10 @@
                     Christina Martinez, Taylor Robinett)
 * Assignment Title: Galaga_Project
 * Assignment Description: This program is a recreation of the
-*       vintage shooter, Galaga. This file dictates the
-*       creation and movement of the player ship
+*       vintage shooter, Galaga.
 * Due Date: 4/25/2018
 * Date Created: 4/7/2018
-* Date Last Modified: 4/12/2018
+* Date Last Modified: 4/21/2018
 */
 
 #include <SDL.h>
@@ -15,12 +14,38 @@
 
 const int WIDTH = 500;
 const int HEIGHT = 500;
+const int STARTING_X = (WIDTH / 2) - 40;
 
 // Basic enemy ship constructor
 EnemyShip::EnemyShip()
 {
-    x = (WIDTH / 2) + 25;
+    x = STARTING_X;
     y = 100;
+}
+
+// Constructs enemy ships with different coordinates
+EnemyShip::EnemyShip(int position)
+{
+    if (position < 5)
+    {
+        x = (STARTING_X) + (position * 40);
+        y = 100;
+    }
+    else if (position >= 5 && position < 7)
+    {
+        x = (STARTING_X) + ((position - 5) * 160);
+        y = 150;
+    }
+    else if (position >= 7 && position < 10)
+    {
+        x = (STARTING_X) + ((position - 6) * 40);
+        y = 150;
+    }
+    else if (position == 10)
+    {
+        x = (STARTING_X) + (80);
+        y = 50;
+    }
 }
 
 // Enemy ship de-constructor
@@ -44,22 +69,21 @@ int EnemyShip::getY()
 // Moving enemy ship
 void EnemyShip::enemyMove()
 {
-    static int frames = 0;
-    if (frames >= 0 && frames < 100)
+    if (moveFrame >= 0 && moveFrame < 100)
     {
         x -= 1;
     }
-    else if (frames >= 100 && frames < 200)
+    else if (moveFrame >= 100 && moveFrame < 200)
     {
         x += 1;
     }
-    if (frames < 200)
+    if (moveFrame < 200)
     {
-        frames++;
+        moveFrame++;
     }
     else
     {
-        frames = 0;
+        moveFrame = 0;
     }
 }
 
@@ -73,9 +97,3 @@ void EnemyShip::renderShip(SDL_Renderer* field, SDL_Texture* space)
     enemyShip.w = ShipW;
     SDL_RenderCopy(field, space, NULL, &enemyShip);
 }
-
-// Checks if enemy ship is shot
-/*void EnemyShip::checkCollision()
-{
-
-}*/
